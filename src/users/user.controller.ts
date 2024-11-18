@@ -4,6 +4,7 @@ import {
   UseGuards,
   Request,
   ForbiddenException,
+  NotFoundException,
 } from '@nestjs/common';
 import { UsersService } from './user.service';
 import { JwtAuthGuard } from '../authentification/guards/jwt-auth.guard';
@@ -26,7 +27,7 @@ export class UsersController {
     try {
       const user = await this.usersService.findById(req.user.userId);
       if (!user) {
-        throw new ForbiddenException('User not found');
+        throw new NotFoundException('User not found');
       }
 
       // Remove sensitive information
@@ -44,9 +45,7 @@ export class UsersController {
   async findAll() {
     try {
       const users = await this.usersService.findAll();
-      return users.map(
-        ({ password, resetToken, resetTokenExpiry, ...result }) => result,
-      );
+      return users
     } catch {
       throw new ForbiddenException('Unable to retrieve users');
     }
