@@ -1,4 +1,10 @@
-import { Controller, Get, UseGuards, Request, ForbiddenException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  UseGuards,
+  Request,
+  ForbiddenException,
+} from '@nestjs/common';
 import { UsersService } from './user.service';
 import { JwtAuthGuard } from '../authentification/guards/jwt-auth.guard';
 import { RolesGuard } from '../common/guards/roles.guard';
@@ -22,7 +28,7 @@ export class UsersController {
       if (!user) {
         throw new ForbiddenException('User not found');
       }
-      
+
       // Remove sensitive information
       const { password, resetToken, resetTokenExpiry, ...result } = user;
       return result;
@@ -38,7 +44,9 @@ export class UsersController {
   async findAll() {
     try {
       const users = await this.usersService.findAll();
-      return users.map(({ password, resetToken, resetTokenExpiry, ...result }) => result);
+      return users.map(
+        ({ password, resetToken, resetTokenExpiry, ...result }) => result,
+      );
     } catch (error) {
       throw new ForbiddenException('Unable to retrieve users');
     }

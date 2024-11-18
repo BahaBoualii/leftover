@@ -9,10 +9,9 @@ export class MailService {
   private backendUrl: string;
 
   constructor(private configService: ConfigService) {
-
     this.senderEmail = this.configService.get<string>('GMAIL_ADDRESS');
     this.backendUrl = this.configService.get<string>('BACKEND_URL');
-    
+
     // Create mail transporter
     this.transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -23,10 +22,13 @@ export class MailService {
     });
   }
 
-  async sendVerificationEmail(email: string, verificationToken: string): Promise<void> {
+  async sendVerificationEmail(
+    email: string,
+    verificationToken: string,
+  ): Promise<void> {
     // For now we rae using backend URL gotta change to frontendURL in
     const verificationUrl = `${this.backendUrl}/auth/verify/${verificationToken}`;
-    console.log(verificationUrl)
+    console.log(verificationUrl);
 
     // Email content
     const mailOptions = {
@@ -65,11 +67,14 @@ export class MailService {
     }
   }
 
-  async sendPasswordResetEmail(email: string, resetToken: string): Promise<void> {
+  async sendPasswordResetEmail(
+    email: string,
+    resetToken: string,
+  ): Promise<void> {
     // Replace backendUrl with frontend URL if necessary
     const resetUrl = `${this.backendUrl}/reset-password?token=${resetToken}`;
-    console.log(resetUrl)
-  
+    console.log(resetUrl);
+
     // Email content
     const mailOptions = {
       from: this.senderEmail,
@@ -99,7 +104,7 @@ export class MailService {
         </div>
       `,
     };
-  
+
     try {
       await this.transporter.sendMail(mailOptions);
     } catch (error) {
@@ -107,5 +112,4 @@ export class MailService {
       throw new Error('Failed to send password reset email');
     }
   }
-  
 }

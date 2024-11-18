@@ -22,10 +22,12 @@ import { ThrottlerModule } from '@nestjs/throttler';
     }),
     MailModule,
     UsersModule,
-    ThrottlerModule.forRoot([{
+    ThrottlerModule.forRoot([
+      {
         ttl: 60000,
         limit: 10,
-      }])
+      },
+    ]),
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
