@@ -32,8 +32,7 @@ export class UsersController {
       // Remove sensitive information
       const { password, resetToken, resetTokenExpiry, ...result } = user;
       return result;
-    } catch (error) {
-      console.log(error)
+    } catch {
       throw new ForbiddenException('Unable to retrieve profile');
     }
   }
