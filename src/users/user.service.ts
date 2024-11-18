@@ -37,8 +37,8 @@ export class UsersService {
     try {
       const user = await this.userRepository.findOne({
         where: { id },
-        select: ['id','email', 'role'],
-      })
+        select: ['id', 'email', 'role'],
+      });
       if (!user) {
         throw new NotFoundException(`User with ID ${id} not found`);
       }
@@ -64,7 +64,7 @@ export class UsersService {
       return await this.userRepository.findOne({
         where: { verificationToken: token },
       });
-    } catch{
+    } catch {
       throw new InternalServerErrorException('Failed to verify token');
     }
   }

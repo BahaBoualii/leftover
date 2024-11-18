@@ -9,7 +9,7 @@ module.exports = {
   extends: [
     'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended',
-    'eslint:recommended'
+    'eslint:recommended',
   ],
   root: true,
   env: {
@@ -24,4 +24,3 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
   },
 };
-
