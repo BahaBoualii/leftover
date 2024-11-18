@@ -28,7 +28,6 @@ export class MailService {
   ): Promise<void> {
     // For now we rae using backend URL gotta change to frontendURL in
     const verificationUrl = `${this.backendUrl}/auth/verify/${verificationToken}`;
-   
 
     // Email content
     const mailOptions = {
@@ -104,7 +103,7 @@ export class MailService {
 
     try {
       await this.transporter.sendMail(mailOptions);
-    } catch{
+    } catch {
       throw new Error('Failed to send password reset email');
     }
   }

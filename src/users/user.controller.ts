@@ -30,9 +30,7 @@ export class UsersController {
         throw new NotFoundException('User not found');
       }
 
-      // Remove sensitive information
-      const { password, resetToken, resetTokenExpiry, ...result } = user;
-      return result;
+      return user;
     } catch {
       throw new ForbiddenException('Unable to retrieve profile');
     }
@@ -45,7 +43,7 @@ export class UsersController {
   async findAll() {
     try {
       const users = await this.usersService.findAll();
-      return users
+      return users;
     } catch {
       throw new ForbiddenException('Unable to retrieve users');
     }

@@ -44,7 +44,6 @@ export class AuthService {
         isVerified: false,
       });
 
-
       // Send verification email
       await this.mailService.sendVerificationEmail(email, verificationToken);
 
@@ -131,7 +130,7 @@ export class AuthService {
       await this.mailService.sendPasswordResetEmail(email, resetToken);
 
       return { message: 'Password reset instructions sent to your email' };
-    } catch{
+    } catch {
       throw new BadRequestException('Password reset initiation failed');
     }
   }
