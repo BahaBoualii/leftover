@@ -28,7 +28,7 @@ export class MailService {
   ): Promise<void> {
     // For now we rae using backend URL gotta change to frontendURL in
     const verificationUrl = `${this.backendUrl}/auth/verify/${verificationToken}`;
-    console.log(verificationUrl);
+   
 
     // Email content
     const mailOptions = {
@@ -61,8 +61,7 @@ export class MailService {
 
     try {
       await this.transporter.sendMail(mailOptions);
-    } catch (error) {
-      console.error('Error sending verification email:', error);
+    } catch {
       throw new Error('Failed to send verification email');
     }
   }
@@ -73,8 +72,6 @@ export class MailService {
   ): Promise<void> {
     // Replace backendUrl with frontend URL if necessary
     const resetUrl = `${this.backendUrl}/reset-password?token=${resetToken}`;
-    console.log(resetUrl);
-
     // Email content
     const mailOptions = {
       from: this.senderEmail,
@@ -107,8 +104,7 @@ export class MailService {
 
     try {
       await this.transporter.sendMail(mailOptions);
-    } catch (error) {
-      console.error('Error sending password reset email:', error);
+    } catch{
       throw new Error('Failed to send password reset email');
     }
   }

@@ -16,11 +16,9 @@ export class UsersService {
 
   async create(userData: Partial<User>): Promise<User> {
     try {
-      console.log('hello');
       const user = this.userRepository.create(userData);
       return await this.userRepository.save(user);
-    } catch (error) {
-      console.log(error);
+    } catch {
       throw new InternalServerErrorException('Failed to create user');
     }
   }
@@ -51,9 +49,8 @@ export class UsersService {
   async findByEmail(email: string): Promise<User | null> {
     try {
       return await this.userRepository.findOne({ where: { email } });
-    } catch (error) {
-      console.log(error);
-      throw new InternalServerErrorException('Failed to retrieve user', error);
+    } catch {
+      throw new InternalServerErrorException('Failed to retrieve user');
     }
   }
 
@@ -62,8 +59,7 @@ export class UsersService {
       return await this.userRepository.findOne({
         where: { verificationToken: token },
       });
-    } catch (error) {
-      console.log(error);
+    } catch{
       throw new InternalServerErrorException('Failed to verify token');
     }
   }
@@ -73,8 +69,7 @@ export class UsersService {
       return await this.userRepository.findOne({
         where: { resetToken: token },
       });
-    } catch (error) {
-      console.log(error);
+    } catch {
       throw new InternalServerErrorException('Failed to verify reset token');
     }
   }
@@ -85,8 +80,7 @@ export class UsersService {
         isVerified: true,
         verificationToken: null,
       });
-    } catch (error) {
-      console.log(error);
+    } catch {
       throw new InternalServerErrorException('Failed to verify email');
     }
   }
@@ -97,8 +91,7 @@ export class UsersService {
         resetToken,
         resetTokenExpiry: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
       });
-    } catch (error) {
-      console.log(error);
+    } catch {
       throw new InternalServerErrorException('Failed to set reset token');
     }
   }
@@ -108,8 +101,7 @@ export class UsersService {
       await this.userRepository.update(userId, {
         password: hashedPassword,
       });
-    } catch (error) {
-      console.log(error);
+    } catch {
       throw new InternalServerErrorException('Failed to update password');
     }
   }
@@ -120,8 +112,7 @@ export class UsersService {
         resetToken: null,
         resetTokenExpiry: null,
       });
-    } catch (error) {
-      console.log(error);
+    } catch {
       throw new InternalServerErrorException('Failed to clear reset token');
     }
   }

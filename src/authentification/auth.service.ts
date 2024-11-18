@@ -44,7 +44,6 @@ export class AuthService {
         isVerified: false,
       });
 
-      console.log('USer:', user);
 
       // Send verification email
       await this.mailService.sendVerificationEmail(email, verificationToken);
@@ -54,8 +53,7 @@ export class AuthService {
           'Registration successful. Please check your email to verify your account.',
         userId: user.id,
       };
-    } catch (error) {
-      console.log(error);
+    } catch {
       throw new BadRequestException('Registration failed. Please try again.');
     }
   }
@@ -115,8 +113,7 @@ export class AuthService {
 
       await this.usersService.markEmailAsVerified(user.id);
       return { message: 'Email verified successfully' };
-    } catch (error) {
-      console.log(error);
+    } catch {
       throw new BadRequestException('Email verification failed');
     }
   }
@@ -134,8 +131,7 @@ export class AuthService {
       await this.mailService.sendPasswordResetEmail(email, resetToken);
 
       return { message: 'Password reset instructions sent to your email' };
-    } catch (error) {
-      console.log(error);
+    } catch{
       throw new BadRequestException('Password reset initiation failed');
     }
   }
