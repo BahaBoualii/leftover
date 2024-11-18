@@ -5,7 +5,6 @@ import { MailService } from '../mailing/mail.service';
 import * as bcrypt from 'bcrypt';
 import { RegisterDto, LoginDto, ResetPasswordDto } from './dto/auth.dto';
 import { v4 as uuidv4 } from 'uuid';
-import { JwtStrategy} from './strategies/jwt.strategy';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 
 
