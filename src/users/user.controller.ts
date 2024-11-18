@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, UseGuards, Request, ForbiddenException } from '@nestjs/common';
+import { Controller, Get, UseGuards, Request, ForbiddenException } from '@nestjs/common';
 import { UsersService } from './user.service';
 import { JwtAuthGuard } from '../authentification/guards/jwt-auth.guard';
 import { RolesGuard } from '../common/guards/roles.guard';
