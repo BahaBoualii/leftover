@@ -32,7 +32,7 @@ export class UsersController {
       // Remove sensitive information
       const { password, resetToken, resetTokenExpiry, ...result } = user;
       return result;
-    } catch (error) {
+    } catch () {
       throw new ForbiddenException('Unable to retrieve profile');
     }
   }
@@ -47,7 +47,7 @@ export class UsersController {
       return users.map(
         ({ password, resetToken, resetTokenExpiry, ...result }) => result,
       );
-    } catch (error) {
+    } catch () {
       throw new ForbiddenException('Unable to retrieve users');
     }
   }
