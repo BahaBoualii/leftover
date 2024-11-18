@@ -135,6 +135,7 @@ export class AuthService {
 
       return { message: 'Password reset instructions sent to your email' };
     } catch (error) {
+      console.log(error);
       throw new BadRequestException('Password reset initiation failed');
     }
   }

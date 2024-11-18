@@ -53,7 +53,7 @@ export class UsersService {
       return await this.userRepository.findOne({ where: { email } });
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException('Failed to retrieve user');
+      throw new InternalServerErrorException('Failed to retrieve user', error);
     }
   }
 
@@ -63,6 +63,7 @@ export class UsersService {
         where: { verificationToken: token },
       });
     } catch (error) {
+      console.log(error);
       throw new InternalServerErrorException('Failed to verify token');
     }
   }
@@ -73,6 +74,7 @@ export class UsersService {
         where: { resetToken: token },
       });
     } catch (error) {
+      console.log(error);
       throw new InternalServerErrorException('Failed to verify reset token');
     }
   }
@@ -84,6 +86,7 @@ export class UsersService {
         verificationToken: null,
       });
     } catch (error) {
+      console.log(error);
       throw new InternalServerErrorException('Failed to verify email');
     }
   }
@@ -95,6 +98,7 @@ export class UsersService {
         resetTokenExpiry: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
       });
     } catch (error) {
+      console.log(error);
       throw new InternalServerErrorException('Failed to set reset token');
     }
   }
@@ -105,6 +109,7 @@ export class UsersService {
         password: hashedPassword,
       });
     } catch (error) {
+      console.log(error);
       throw new InternalServerErrorException('Failed to update password');
     }
   }
@@ -116,6 +121,7 @@ export class UsersService {
         resetTokenExpiry: null,
       });
     } catch (error) {
+      console.log(error);
       throw new InternalServerErrorException('Failed to clear reset token');
     }
   }
