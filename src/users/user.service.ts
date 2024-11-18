@@ -25,7 +25,9 @@ export class UsersService {
 
   async findAll(): Promise<User[]> {
     try {
-      return await this.userRepository.find();
+      return await this.userRepository.find({
+        select: ['id', 'email', 'role'],
+      });
     } catch {
       throw new InternalServerErrorException('Failed to retrieve users');
     }
@@ -33,7 +35,10 @@ export class UsersService {
 
   async findById(id: string): Promise<User> {
     try {
-      const user = await this.userRepository.findOne({ where: { id } });
+      const user = await this.userRepository.findOne({
+        where: { id },
+        select: ['id','email', 'role'],
+      })
       if (!user) {
         throw new NotFoundException(`User with ID ${id} not found`);
       }
