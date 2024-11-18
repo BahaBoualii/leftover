@@ -28,7 +28,7 @@ export class UsersService {
   async findAll(): Promise<User[]> {
     try {
       return await this.userRepository.find();
-    } catch (error) {
+    } catch {
       throw new InternalServerErrorException('Failed to retrieve users');
     }
   }
