@@ -3,13 +3,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import 'dotenv/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthModule} from './authentification/auth.module';
+import { AuthModule } from './authentification/auth.module';
 import { UsersModule } from './users/user.module';
 import { MailModule } from './mailing/mail.module';
 import { ConfigModule } from '@nestjs/config';
 import { User } from './users/entities/user-entity';
-
-
 
 @Module({
   imports: [

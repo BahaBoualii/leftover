@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  UnauthorizedException,
+  BadRequestException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/user.service';
 import { MailService } from '../mailing/mail.service';
@@ -6,7 +10,6 @@ import * as bcrypt from 'bcrypt';
 import { RegisterDto, LoginDto, ResetPasswordDto } from './dto/auth.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
-
 
 @Injectable()
 export class AuthService {
@@ -28,10 +31,10 @@ export class AuthService {
     try {
       // Hash password
       const hashedPassword = await bcrypt.hash(password, 12);
-      
+
       // Generate verification token
       const verificationToken = uuidv4();
-      
+
       // Create user
       const user = await this.usersService.create({
         email,
@@ -41,17 +44,18 @@ export class AuthService {
         isVerified: false,
       });
 
-      console.log("USer:" , user)
+      console.log('USer:', user);
 
       // Send verification email
       await this.mailService.sendVerificationEmail(email, verificationToken);
 
       return {
-        message: 'Registration successful. Please check your email to verify your account.',
-        userId: user.id
+        message:
+          'Registration successful. Please check your email to verify your account.',
+        userId: user.id,
       };
     } catch (error) {
-      console.log(error)
+      console.log(error);
       throw new BadRequestException('Registration failed. Please try again.');
     }
   }
@@ -91,8 +95,8 @@ export class AuthService {
         user: {
           id: user.id,
           email: user.email,
-          roles: user.role
-        }
+          roles: user.role,
+        },
       };
     } catch (error) {
       if (error instanceof UnauthorizedException) {
@@ -112,7 +116,7 @@ export class AuthService {
       await this.usersService.markEmailAsVerified(user.id);
       return { message: 'Email verified successfully' };
     } catch (error) {
-      console.log(error)
+      console.log(error);
       throw new BadRequestException('Email verification failed');
     }
   }

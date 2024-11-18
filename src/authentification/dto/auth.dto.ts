@@ -1,4 +1,4 @@
-import { IsEmail, IsString, MinLength, Matches,IsEnum } from 'class-validator';
+import { IsEmail, IsString, MinLength, Matches, IsEnum } from 'class-validator';
 import { Role } from 'src/common/enum/role.enum';
 
 export class RegisterDto {
@@ -8,7 +8,8 @@ export class RegisterDto {
   @IsString()
   @MinLength(8)
   @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
-    message: 'Password must contain uppercase, lowercase, number/special character',
+    message:
+      'Password must contain uppercase, lowercase, number/special character',
   })
   password: string;
 
@@ -17,8 +18,6 @@ export class RegisterDto {
   })
   role: Role;
 }
-
-
 
 export class LoginDto {
   @IsEmail()
@@ -35,7 +34,8 @@ export class ResetPasswordDto {
   @IsString()
   @MinLength(8)
   @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
-    message: 'Password must contain uppercase, lowercase, number/special character',
+    message:
+      'Password must contain uppercase, lowercase, number/special character',
   })
   newPassword: string;
 }

@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user-entity';
@@ -12,11 +16,11 @@ export class UsersService {
 
   async create(userData: Partial<User>): Promise<User> {
     try {
-      console.log("hello")
+      console.log('hello');
       const user = this.userRepository.create(userData);
       return await this.userRepository.save(user);
     } catch (error) {
-       console.log(error)
+      console.log(error);
       throw new InternalServerErrorException('Failed to create user');
     }
   }
@@ -48,9 +52,8 @@ export class UsersService {
     try {
       return await this.userRepository.findOne({ where: { email } });
     } catch (error) {
-      console.log(error)
+      console.log(error);
       throw new InternalServerErrorException('Failed to retrieve user');
-      
     }
   }
 
