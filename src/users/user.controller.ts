@@ -25,12 +25,7 @@ export class UsersController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   async getProfile(@Request() req) {
     try {
-      const user = await this.usersService.findById(req.user.userId);
-      if (!user) {
-        throw new NotFoundException('User not found');
-      }
-
-      return user;
+      return await this.usersService.findById(req.user.userId);
     } catch {
       throw new ForbiddenException('Unable to retrieve profile');
     }
@@ -42,8 +37,7 @@ export class UsersController {
   @ApiResponse({ status: 403, description: 'Forbidden resource' })
   async findAll() {
     try {
-      const users = await this.usersService.findAll();
-      return users;
+       return await this.usersService.findAll();
     } catch {
       throw new ForbiddenException('Unable to retrieve users');
     }
