@@ -4,14 +4,25 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm';
 import { Role } from 'src/common/enum/role.enum';
 import { Exclude } from 'class-transformer';
+import { UserStatus } from 'src/common/enum/user-status.enum';
+import { Customer } from 'src/customers/entities/customer.entity';
+import { Store } from 'src/stores/entities/store.entity';
 
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @Column()
+  firstName: string;
+
+  @Column()
+  lastName: string;
 
   @Column({ unique: true })
   email: string;
@@ -19,6 +30,20 @@ export class User {
   @Column()
   @Exclude()
   password: string;
+
+  @Column()
+  phoneNumber: string;
+
+  @Column()
+  status: UserStatus;
+
+  @OneToOne(() => Customer, (customer) => customer.user, { cascade: true })
+  @JoinColumn()
+  customer: Customer;
+
+  @OneToOne(() => Store, (store) => store.user, { cascade: true })
+  @JoinColumn()
+  store: Store;
 
   @Column({ type: 'enum', enum: Role, default: [Role.USER] })
   role: Role;

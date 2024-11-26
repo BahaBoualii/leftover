@@ -4,7 +4,6 @@ import {
   UseGuards,
   Request,
   ForbiddenException,
-  NotFoundException,
 } from '@nestjs/common';
 import { UsersService } from './user.service';
 import { JwtAuthGuard } from '../authentification/guards/jwt-auth.guard';
@@ -37,7 +36,7 @@ export class UsersController {
   @ApiResponse({ status: 403, description: 'Forbidden resource' })
   async findAll() {
     try {
-       return await this.usersService.findAll();
+      return await this.usersService.findAll();
     } catch {
       throw new ForbiddenException('Unable to retrieve users');
     }
