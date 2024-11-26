@@ -7,24 +7,29 @@ import { AuthModule } from './authentification/auth.module';
 import { UsersModule } from './users/user.module';
 import { MailModule } from './mailing/mail.module';
 import { ConfigModule } from '@nestjs/config';
-import { User } from './users/entities/user-entity';
+import { AppDataSource } from './utils/data-source';
+import { CustomersModule } from './customers/customers.module';
+import { StoresModule } from './stores/stores.module';
+import { SupriseBagsModule } from './suprise-bags/suprise-bags.module';
+import { OrdersModule } from './orders/orders.module';
+import { ReviewsModule } from './reviews/reviews.module';
+import { LocationModule } from './location/location.module';
+import { PickupWindowModule } from './pickup-window/pickup-window.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.DB_HOST,
-      port: +process.env.DB_PORT,
-      username: process.env.DB_USERNAME,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
-      entities: [User],
-      synchronize: true,
-    }),
+    TypeOrmModule.forRoot(AppDataSource.options),
     AuthModule,
     UsersModule,
     MailModule,
+    CustomersModule,
+    StoresModule,
+    SupriseBagsModule,
+    OrdersModule,
+    ReviewsModule,
+    LocationModule,
+    PickupWindowModule,
   ],
   controllers: [AppController],
   providers: [AppService],

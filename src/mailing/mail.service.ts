@@ -60,7 +60,8 @@ export class MailService {
 
     try {
       await this.transporter.sendMail(mailOptions);
-    } catch {
+    } catch (error) {
+      console.error(error);
       throw new Error('Failed to send verification email');
     }
   }
