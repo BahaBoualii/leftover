@@ -4,6 +4,8 @@ import {
   UseGuards,
   Request,
   ForbiddenException,
+  Patch,
+  Body,
 } from '@nestjs/common';
 import { UsersService } from './user.service';
 import { JwtAuthGuard } from '../authentification/guards/jwt-auth.guard';
@@ -11,6 +13,7 @@ import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 import { Role } from '../common/enum/role.enum';
 import { ApiTags, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
+import { UpdateUserDto } from './dto/user.dto';
 
 @ApiTags('users')
 @Controller('users')
@@ -28,6 +31,13 @@ export class UsersController {
     } catch {
       throw new ForbiddenException('Unable to retrieve profile');
     }
+  }
+
+  @Patch(':id')
+  @ApiResponse({ status: 200, description: 'Returns the updated user profile' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async updateProfile(@Request() req, @Body() updateUserDto: UpdateUserDto) {
+    return this.usersService.updateProfile(req.user.userId, updateUserDto);
   }
 
   @Get()
