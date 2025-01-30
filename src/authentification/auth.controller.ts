@@ -1,9 +1,18 @@
+/* eslint-disable no-unused-vars */
 import { Controller, Post, Body, UseGuards, Get, Param } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { RegisterDto, LoginDto, ResetPasswordDto } from './dto/auth.dto';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiBody,
+} from '@nestjs/swagger';
 
 import { ThrottlerGuard } from '@nestjs/throttler';
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './dto/login.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -56,16 +65,44 @@ export class AuthController {
   }
 
   @Get('verify/:token')
+  @ApiOperation({
+    summary: 'Verify user email',
+    description: "Verifies a user's email address using a verification token.",
+  })
+  @ApiParam({
+    name: 'token',
+    description: 'Email verification token',
+    example: 'abc123',
+  })
+  @ApiResponse({ status: 200, description: 'Email verified successfully.' })
+  @ApiResponse({ status: 400, description: 'Invalid or expired token.' })
   async verifyEmail(@Param('token') token: string) {
     return this.authService.verifyEmail(token);
   }
 
   @Post('password-reset/initiate')
+  @ApiOperation({
+    summary: 'Initiate password reset',
+    description: "Sends a password reset link to the user's email.",
+  })
+  @ApiBody({ schema: { example: { email: 'user@example.com' } } })
+  @ApiResponse({
+    status: 200,
+    description: 'Password reset email sent successfully.',
+  })
+  @ApiResponse({ status: 404, description: 'User not found.' })
   async initiatePasswordReset(@Body('email') email: string) {
     return this.authService.initiatePasswordReset(email);
   }
 
   @Post('password-reset/complete')
+  @ApiOperation({
+    summary: 'Complete password reset',
+    description: "Resets the user's password using a valid reset token.",
+  })
+  @ApiBody({ type: ResetPasswordDto })
+  @ApiResponse({ status: 200, description: 'Password reset successfully.' })
+  @ApiResponse({ status: 400, description: 'Invalid or expired token.' })
   async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
     return this.authService.resetPassword(resetPasswordDto);
   }

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Injectable,
   UnauthorizedException,
@@ -7,9 +8,11 @@ import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/user.service';
 import { MailService } from '../mailing/mail.service';
 import * as bcrypt from 'bcrypt';
-import { RegisterDto, LoginDto, ResetPasswordDto } from './dto/auth.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
+import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 
 @Injectable()
 export class AuthService {
