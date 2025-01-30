@@ -6,6 +6,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
+import { UpdateUserDto } from './dto/user.dto';
 
 @Injectable()
 export class UsersService {
@@ -120,5 +121,17 @@ export class UsersService {
     } catch {
       throw new InternalServerErrorException('Failed to clear reset token');
     }
+  }
+
+  async updateProfile(userId: string, updateUserDto: UpdateUserDto): Promise<User> {
+    const user = await this.userRepository.findOne({ 
+      where: {id : userId}
+     });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const updatedUser = Object.assign(user, updateUserDto);
+    return this.userRepository.save(updatedUser);
   }
 }
