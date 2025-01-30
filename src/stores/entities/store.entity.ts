@@ -1,4 +1,4 @@
-import { UUID } from 'crypto';
+/* eslint-disable no-unused-vars */
 import { Location } from 'src/location/entities/location.entity';
 import { PickupWindow } from 'src/pickup-window/entities/pickup-window.entity';
 import { Review } from 'src/reviews/entities/review.entity';
@@ -17,6 +17,7 @@ import {
 @Entity()
 export class Store {
   @PrimaryGeneratedColumn('uuid')
+  storeId: string;
   storeId: string;
 
   @OneToOne(() => User, (user) => user.store, { onDelete: 'CASCADE' })

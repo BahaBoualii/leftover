@@ -6,7 +6,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 @Entity()
 export class SurpriseBag {
   @PrimaryGeneratedColumn('uuid')
-  bagId: number;
+  bagId: string;
 
   @Column()
   name: string;

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Injectable,
   NotFoundException,
@@ -123,10 +124,13 @@ export class UsersService {
     }
   }
 
-  async updateProfile(userId: string, updateUserDto: UpdateUserDto): Promise<User> {
-    const user = await this.userRepository.findOne({ 
-      where: {id : userId}
-     });
+  async updateProfile(
+    userId: string,
+    updateUserDto: UpdateUserDto,
+  ): Promise<User> {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+    });
     if (!user) {
       throw new NotFoundException('User not found');
     }
