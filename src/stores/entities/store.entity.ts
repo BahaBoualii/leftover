@@ -1,3 +1,4 @@
+import { UUID } from 'crypto';
 import { Location } from 'src/location/entities/location.entity';
 import { PickupWindow } from 'src/pickup-window/entities/pickup-window.entity';
 import { Review } from 'src/reviews/entities/review.entity';
@@ -16,7 +17,7 @@ import {
 @Entity()
 export class Store {
   @PrimaryGeneratedColumn('uuid')
-  storeId: number;
+  storeId: string;
 
   @OneToOne(() => User, (user) => user.store, { onDelete: 'CASCADE' })
   user: User;

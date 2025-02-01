@@ -9,7 +9,7 @@ import { MailModule } from './mailing/mail.module';
 import { ConfigModule } from '@nestjs/config';
 import { AppDataSource } from './utils/data-source';
 import { CustomersModule } from './customers/customers.module';
-import { StoresModule } from './stores/stores.module';
+import { StoresModule } from './stores/store.module';
 import { SupriseBagsModule } from './suprise-bags/suprise-bags.module';
 import { OrdersModule } from './orders/orders.module';
 import { ReviewsModule } from './reviews/reviews.module';
