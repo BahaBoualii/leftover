@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
@@ -109,8 +110,10 @@ export class MailService {
     }
   }
 
-
-  async sendStoreVerificationEmail(email: string, storeName: string): Promise<void> {
+  async sendStoreVerificationEmail(
+    email: string,
+    storeName: string,
+  ): Promise<void> {
     const mailOptions = {
       from: this.senderEmail,
       to: email,
@@ -141,6 +144,7 @@ export class MailService {
     try {
       await this.transporter.sendMail(mailOptions);
     } catch (error) {
+      console.error(error);
       throw new Error('Failed to send store verification email');
     }
   }

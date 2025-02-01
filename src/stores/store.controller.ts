@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Controller,
   Post,
@@ -7,6 +8,7 @@ import {
   Put,
   Param,
   Get,
+  NotFoundException,
 } from '@nestjs/common';
 import {
   ApiOperation,
@@ -14,7 +16,7 @@ import {
   ApiResponse,
   ApiTags,
   ApiParam,
-  ApiBearerAuth, // Add this decorator
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { StoreService } from './store.service';
@@ -26,17 +28,22 @@ import { Role } from 'src/common/enum/role.enum';
 import { Store } from './entities/store.entity';
 
 @ApiTags('Store')
-@ApiBearerAuth() // Add this to enable token authentication for all endpoints in the controller
+@ApiBearerAuth('access-token')
 @Controller('store')
 export class StoreController {
   constructor(private readonly storeService: StoreService) {}
 
   @Post('register')
   @ApiOperation({ summary: 'Register a new store' })
-  @ApiBody({ type: CreateStoreDto })
-  @ApiResponse({ status: 201, description: 'The store has been successfully registered.' })
+  @ApiBody({
+    description: 'Data required to create a new store',
+    type: CreateStoreDto,
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'The store has been successfully registered.',
+  })
   @ApiResponse({ status: 400, description: 'Invalid input data.' })
-  @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles([Role.STORE_ADMIN, Role.USER])
   async registerStore(@Body() createStoreDto: CreateStoreDto, @Request() req) {
@@ -44,23 +51,70 @@ export class StoreController {
     return this.storeService.createStore(createStoreDto, userId);
   }
 
+  @Get(':storeId/surprise-bags')
+  @ApiOperation({
+    summary: 'Get all surprise bags in a store',
+    description: 'Retrieves all surprise bags available in a specific store.',
+  })
+  @ApiParam({
+    name: 'storeId',
+    description: 'ID of the store',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'List of surprise bags retrieved successfully.',
+  })
+  @ApiResponse({ status: 404, description: 'Store not found.' })
+  async getSurpriseBagsByStore(@Param('storeId') storeId: string) {
+    const surpriseBags =
+      await this.storeService.getSurpriseBagsByStore(storeId);
+    if (!surpriseBags) {
+      throw new NotFoundException('Store not found');
+    }
+    return surpriseBags;
+  }
+
   @Put(':id')
   @ApiOperation({ summary: 'Update store profile' })
-  @ApiParam({ name: 'id', required: true, example: '123e4567-e89b-12d3-a456-426614174000', description: 'ID of the store to update' })
-  @ApiBody({ type: UpdateStoreDto })
-  @ApiResponse({ status: 200, description: 'The store profile has been successfully updated.' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    example: '123e4567-e89b-12d3-a456-426614174000',
+    description: 'ID of the store to update',
+  })
+  @ApiBody({
+    description: 'Data required to update the store',
+    type: UpdateStoreDto,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'The store profile has been successfully updated.',
+  })
   @ApiResponse({ status: 404, description: 'Store not found.' })
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles([Role.STORE_ADMIN])
-  async updateStore(@Param('id') storeId: string, @Body() updateStoreDto: UpdateStoreDto, @Request() req) {
+  async updateStore(
+    @Param('id') storeId: string,
+    @Body() updateStoreDto: UpdateStoreDto,
+    @Request() req,
+  ) {
     const userId = req.user.id;
     return this.storeService.updateStore(storeId, updateStoreDto, userId);
   }
 
   @Put(':id/verify')
   @ApiOperation({ summary: 'Verify a store' })
-  @ApiParam({ name: 'id', required: true, example: '123e4567-e89b-12d3-a456-426614174000', description: 'ID of the store to verify' })
-  @ApiResponse({ status: 200, description: 'The store has been successfully verified.' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    example: '123e4567-e89b-12d3-a456-426614174000',
+    description: 'ID of the store to verify',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'The store has been successfully verified.',
+  })
   @ApiResponse({ status: 404, description: 'Store not found.' })
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles([Role.ADMIN])
@@ -70,8 +124,17 @@ export class StoreController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get store details' })
-  @ApiParam({ name: 'id', required: true, example: '123e4567-e89b-12d3-a456-426614174000', description: 'ID of the store to retrieve' })
-  @ApiResponse({ status: 200, description: 'The store details have been successfully retrieved.' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    example: '123e4567-e89b-12d3-a456-426614174000',
+    description: 'ID of the store to retrieve',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'The store details have been successfully retrieved.',
+    type: Store,
+  })
   @ApiResponse({ status: 404, description: 'Store not found.' })
   @UseGuards(AuthGuard('jwt'))
   async getStore(@Param('id') storeId: string): Promise<Store> {
@@ -80,7 +143,11 @@ export class StoreController {
 
   @Get()
   @ApiOperation({ summary: 'Get all stores' })
-  @ApiResponse({ status: 200, description: 'The list of stores has been successfully retrieved.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The list of stores has been successfully retrieved.',
+    type: [Store],
+  })
   @UseGuards(AuthGuard('jwt'))
   async getAllStores(): Promise<Store[]> {
     return this.storeService.getAllStores();

@@ -18,7 +18,6 @@ import {
 export class Store {
   @PrimaryGeneratedColumn('uuid')
   storeId: string;
-  storeId: string;
 
   @OneToOne(() => User, (user) => user.store, { onDelete: 'CASCADE' })
   user: User;
