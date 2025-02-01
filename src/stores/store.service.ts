@@ -6,12 +6,13 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Store } from './entities/store.entity';
+import { Store, StoreCategory } from './entities/store.entity';
 import { CreateStoreDto } from './dto/create-store.dto';
 import { UpdateStoreDto } from './dto/update-store.dto';
 import { User } from '../users/entities/user.entity';
 import { MailService } from '../mailing/mail.service';
 import { SurpriseBag } from 'src/suprise-bags/entities/surprise-bag.entity';
+import { paginate, PaginationMeta } from 'src/utils/pagination';
 
 @Injectable()
 export class StoreService {
@@ -110,5 +111,58 @@ export class StoreService {
   async getAllStores(): Promise<Store[]> {
     const stores = await this.storeRepository.find();
     return stores;
+  }
+
+  async searchNearbyStores(
+    latitude: number,
+    longitude: number,
+    radius: number,
+    category?: StoreCategory,
+    sortBy?: string,
+    sortOrder: 'ASC' | 'DESC' = 'ASC',
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<{ data: Store[]; pagination: PaginationMeta }> {
+    const query = this.storeRepository
+      .createQueryBuilder('store')
+      .leftJoinAndSelect('store.location', 'location')
+      .where(
+        `ST_DWithin(
+          ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography,
+          ST_SetSRID(ST_MakePoint(location.longitude, location.latitude), 4326)::geography,
+          :radius * 1000
+        )`,
+        { latitude, longitude, radius },
+      );
+
+    if (category) {
+      query.andWhere('store.category = :category', { category });
+    }
+
+    if (sortBy === 'distance') {
+      query
+        .addSelect(
+          `ST_Distance(
+          ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography,
+          ST_SetSRID(ST_MakePoint(location.longitude, location.latitude), 4326)::geography
+        )`,
+          'distance',
+        )
+        .orderBy('distance', sortOrder);
+    } else if (sortBy) {
+      query.orderBy(`store.${sortBy}`, sortOrder);
+    }
+
+    return paginate(query, page, limit);
+  }
+
+  async getFeaturedStores(
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<{ data: Store[]; pagination: PaginationMeta }> {
+    const query = this.storeRepository
+      .createQueryBuilder('store')
+      .where('store.averageRating >= :rating', { rating: 3.5 });
+    return paginate(query, page, limit);
   }
 }

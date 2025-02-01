@@ -9,6 +9,7 @@ import {
   Param,
   Get,
   NotFoundException,
+  Query,
 } from '@nestjs/common';
 import {
   ApiOperation,
@@ -25,7 +26,7 @@ import { UpdateStoreDto } from './dto/update-store.dto';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { Role } from 'src/common/enum/role.enum';
-import { Store } from './entities/store.entity';
+import { Store, StoreCategory } from './entities/store.entity';
 
 @ApiTags('Store')
 @ApiBearerAuth('access-token')
@@ -151,5 +152,43 @@ export class StoreController {
   @UseGuards(AuthGuard('jwt'))
   async getAllStores(): Promise<Store[]> {
     return this.storeService.getAllStores();
+  }
+
+  @Get('search')
+  @ApiOperation({
+    summary: 'Search nearby stores',
+    description: 'Search for stores near a given location.',
+  })
+  @ApiResponse({ status: 200, description: 'List of nearby stores.' })
+  async searchNearbyStores(
+    @Query('latitude') latitude: number,
+    @Query('longitude') longitude: number,
+    @Query('radius') radius: number,
+    @Query('category') category?: StoreCategory,
+    @Query('sortBy') sortBy?: string,
+    @Query('sortOrder') sortOrder?: 'ASC' | 'DESC',
+    @Query('page') page?: number,
+    @Query('limit') limit?: number,
+  ) {
+    return this.storeService.searchNearbyStores(
+      latitude,
+      longitude,
+      radius,
+      category,
+      sortBy,
+      sortOrder,
+      page,
+      limit,
+    );
+  }
+
+  @Get('featured')
+  @ApiOperation({
+    summary: 'Get featured stores',
+    description: 'Returns a list of featured stores.',
+  })
+  @ApiResponse({ status: 200, description: 'List of featured stores.' })
+  async getFeaturedStores() {
+    return this.storeService.getFeaturedStores();
   }
 }
