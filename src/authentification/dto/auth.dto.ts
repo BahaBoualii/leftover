@@ -2,8 +2,17 @@ import { IsEmail, IsString, MinLength, Matches, IsEnum } from 'class-validator';
 import { Role } from 'src/common/enum/role.enum';
 
 export class RegisterDto {
+  @IsString()
+  firstName: string;
+
+  @IsString()
+  lastName: string;
+
   @IsEmail()
   email: string;
+
+  @IsString()
+  phoneNumber: string;
 
   @IsString()
   @MinLength(8)

@@ -108,4 +108,40 @@ export class MailService {
       throw new Error('Failed to send password reset email');
     }
   }
+
+
+  async sendStoreVerificationEmail(email: string, storeName: string): Promise<void> {
+    const mailOptions = {
+      from: this.senderEmail,
+      to: email,
+      subject: 'Your Store Has Been Verified!',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #333;">Congratulations, ${storeName}!</h2>
+          <p>Your store has been successfully verified by our team. You can now start using all the features available to verified stores.</p>
+          <div style="margin: 30px 0;">
+            <a href="${this.backendUrl}/dashboard" 
+               style="background-color: #4CAF50; 
+                      color: white; 
+                      padding: 12px 24px; 
+                      text-decoration: none; 
+                      border-radius: 4px;
+                      display: inline-block;">
+              Go to Dashboard
+            </a>
+          </div>
+          <p>If you have any questions or need assistance, feel free to contact our support team.</p>
+          <p style="margin-top: 30px; color: #666; font-size: 14px;">
+            Thank you for choosing us!
+          </p>
+        </div>
+      `,
+    };
+
+    try {
+      await this.transporter.sendMail(mailOptions);
+    } catch (error) {
+      throw new Error('Failed to send store verification email');
+    }
+  }
 }
