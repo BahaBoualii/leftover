@@ -1,18 +1,18 @@
-import { PartialType } from "@nestjs/swagger";
-import { IsString } from "class-validator";
+import { PartialType } from '@nestjs/swagger';
+import { IsString } from 'class-validator';
 
 export class CreateLocationDto {
-    @IsString()
-    address: string;
+  @IsString()
+  address: string;
 
-    @IsString()
-    city: string;
+  @IsString()
+  city: string;
 
-    @IsString()
-    postalCode: string;
+  @IsString()
+  postalCode: string;
 
-    @IsString()
-    country: string;
+  @IsString()
+  country: string;
 }
 
-export class UpdateLocationDto extends PartialType(CreateLocationDto){}
+export class UpdateLocationDto extends PartialType(CreateLocationDto) {}

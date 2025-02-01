@@ -1,11 +1,16 @@
 /* eslint-disable no-unused-vars */
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SurpriseBag } from './entities/surprise-bag.entity';
 import { CreateSurpriseBagDto } from './dto/create-surprise-bag.dto';
 import { UpdateSurpriseBagDto } from './dto/update-surprise-bag.dto';
 import { Store } from 'src/stores/entities/store.entity';
+import { BagStatus } from 'src/common/enum/bag-status.enum';
 
 @Injectable()
 export class SurpriseBagService {
@@ -19,10 +24,18 @@ export class SurpriseBagService {
   async create(
     createSurpriseBagDto: CreateSurpriseBagDto,
     storeId: string,
+    userId: string,
   ): Promise<SurpriseBag> {
-    const store = await this.storeRepository.findOne({ where: { storeId } });
+    const store = await this.storeRepository.findOne({
+      where: { storeId },
+      relations: ['user'], // Include the user relationship
+    });
     if (!store) {
       throw new NotFoundException('Store not found');
+    }
+
+    if (store.user.id !== userId) {
+      throw new ForbiddenException('You are not the owner of this store');
     }
 
     const surpriseBag = this.surpriseBagRepository.create({
@@ -77,6 +90,9 @@ export class SurpriseBagService {
       throw new NotFoundException('Surprise bag not found');
     }
     surpriseBag.quantity = quantity;
+    if (quantity === 0) {
+      surpriseBag.status = BagStatus.CANCELLED;
+    }
     return this.surpriseBagRepository.save(surpriseBag);
   }
 }

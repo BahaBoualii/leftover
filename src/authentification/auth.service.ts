@@ -23,7 +23,8 @@ export class AuthService {
   ) {}
 
   async register(registerDto: RegisterDto) {
-    const { email, password, role , firstName, lastName , phoneNumber} = registerDto;
+    const { email, password, role, firstName, lastName, phoneNumber } =
+      registerDto;
 
     // Check if user exists
     const existingUser = await this.usersService.findByEmail(email);
@@ -47,7 +48,7 @@ export class AuthService {
         role: role,
         verificationToken,
         isVerified: false,
-        phoneNumber
+        phoneNumber,
       });
 
       // Send verification email

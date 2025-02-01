@@ -8,6 +8,8 @@ import {
   Put,
   Delete,
   Query,
+  UseGuards,
+  Request,
 } from '@nestjs/common';
 import { SurpriseBagService } from './surprise-bags.service';
 import { CreateSurpriseBagDto } from './dto/create-surprise-bag.dto';
@@ -20,6 +22,10 @@ import {
   ApiQuery,
   ApiBody,
 } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from 'src/common/guards/roles.guard';
+import { Roles } from 'src/common/decorators/roles.decorator';
+import { Role } from 'src/common/enum/role.enum';
 
 @ApiTags('surprise-bags')
 @Controller('surprise-bags')
@@ -43,11 +49,19 @@ export class SurpriseBagController {
     description: 'The surprise bag has been successfully created.',
   })
   @ApiResponse({ status: 404, description: 'Store not found.' })
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles([Role.STORE_ADMIN])
   create(
     @Body() createSurpriseBagDto: CreateSurpriseBagDto,
     @Query('storeId') storeId: string,
+    @Request() req,
   ) {
-    return this.surpriseBagService.create(createSurpriseBagDto, storeId);
+    const userId = req.user.id;
+    return this.surpriseBagService.create(
+      createSurpriseBagDto,
+      storeId,
+      userId,
+    );
   }
 
   @Get()
@@ -100,6 +114,8 @@ export class SurpriseBagController {
     description: 'Surprise bag updated successfully.',
   })
   @ApiResponse({ status: 404, description: 'Surprise bag not found.' })
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles([Role.STORE_ADMIN])
   update(
     @Param('id') id: string,
     @Body() updateSurpriseBagDto: UpdateSurpriseBagDto,
@@ -123,6 +139,8 @@ export class SurpriseBagController {
     description: 'Surprise bag deleted successfully.',
   })
   @ApiResponse({ status: 404, description: 'Surprise bag not found.' })
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles([Role.STORE_ADMIN])
   remove(@Param('id') id: string) {
     return this.surpriseBagService.remove(id);
   }
@@ -146,6 +164,8 @@ export class SurpriseBagController {
   })
   @ApiResponse({ status: 200, description: 'Inventory updated successfully.' })
   @ApiResponse({ status: 404, description: 'Surprise bag not found.' })
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles([Role.STORE_ADMIN])
   updateInventory(
     @Param('id') id: string,
     @Query('quantity') quantity: number,

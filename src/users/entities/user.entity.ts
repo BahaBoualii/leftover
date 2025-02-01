@@ -34,7 +34,7 @@ export class User {
   @Column()
   phoneNumber: string;
   //why do we need the status column?
-  @Column({default: UserStatus.ACTIVE})
+  @Column({ default: UserStatus.ACTIVE })
   status: UserStatus;
 
   @OneToOne(() => Customer, (customer) => customer.user, { cascade: true })
