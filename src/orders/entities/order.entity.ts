@@ -12,7 +12,7 @@ import {
 @Entity()
 export class Order {
   @PrimaryGeneratedColumn('uuid')
-  orderId: number;
+  orderId: string;
 
   @Column('timestamp')
   orderDate: Date;

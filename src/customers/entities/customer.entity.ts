@@ -5,7 +5,6 @@ import {
   OneToMany,
   ManyToMany,
   JoinTable,
-  Column,
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
@@ -19,9 +18,10 @@ import { Location } from 'src/location/entities/location.entity';
 @Entity()
 export class Customer {
   @PrimaryGeneratedColumn('uuid')
-  customerId: number;
+  customerId: string;
 
   @OneToOne(() => User, (user) => user.customer, { onDelete: 'CASCADE' })
+  @JoinColumn()
   user: User;
 
   @OneToMany(() => Order, (order) => order.customer)

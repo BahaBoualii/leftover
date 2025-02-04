@@ -21,6 +21,7 @@ import {
   ApiParam,
   ApiQuery,
   ApiBody,
+  ApiBearerAuth
 } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from 'src/common/guards/roles.guard';
@@ -28,6 +29,7 @@ import { Roles } from 'src/common/decorators/roles.decorator';
 import { Role } from 'src/common/enum/role.enum';
 
 @ApiTags('surprise-bags')
+@ApiBearerAuth('access-token')
 @Controller('surprise-bags')
 export class SurpriseBagController {
   constructor(private readonly surpriseBagService: SurpriseBagService) {}
@@ -56,7 +58,7 @@ export class SurpriseBagController {
     @Query('storeId') storeId: string,
     @Request() req,
   ) {
-    const userId = req.user.id;
+    const userId = req.user.userId;
     return this.surpriseBagService.create(
       createSurpriseBagDto,
       storeId,
@@ -65,6 +67,7 @@ export class SurpriseBagController {
   }
 
   @Get()
+  @UseGuards(AuthGuard('jwt'))
   @ApiOperation({
     summary: 'Get all surprise bags',
     description: 'Retrieves a list of all surprise bags.',

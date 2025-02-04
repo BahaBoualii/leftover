@@ -36,7 +36,7 @@ export class StoreService {
 
     const store = this.storeRepository.create({
       ...createStoreDto,
-      user,
+      owner: user,
     });
     return this.storeRepository.save(store);
   }
@@ -65,7 +65,7 @@ export class StoreService {
     if (!store) {
       throw new NotFoundException('Store not found');
     }
-    if (store.user.id !== userId) {
+    if (store.owner.id !== userId) {
       throw new UnauthorizedException(
         'You do not have permission to update this store',
       );
@@ -79,7 +79,7 @@ export class StoreService {
   async verifyStore(storeId: string): Promise<Store> {
     const store = await this.storeRepository.findOne({
       where: { storeId },
-      relations: ['user'],
+      relations: ['owner'],
     });
     if (!store) {
       throw new NotFoundException('Store not found');
@@ -90,7 +90,7 @@ export class StoreService {
 
     // Send verification email
     await this.mailService.sendStoreVerificationEmail(
-      store.user.email,
+      store.owner.email,
       store.storeName,
     );
 
@@ -110,5 +110,9 @@ export class StoreService {
   async getAllStores(): Promise<Store[]> {
     const stores = await this.storeRepository.find();
     return stores;
+  }
+
+  async findByUserId(userId: string): Promise<Store | null> {
+    return this.storeRepository.findOne({ where: { owner: { id: userId } } });
   }
 }
