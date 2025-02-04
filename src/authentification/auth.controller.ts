@@ -1,5 +1,14 @@
 /* eslint-disable no-unused-vars */
-import { Controller, Post, Body, UseGuards, Get, Param, Req, Res } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UseGuards,
+  Get,
+  Param,
+  Req,
+  Res,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {
   ApiTags,
@@ -47,7 +56,7 @@ export class AuthController {
   }
 
   @Post('login')
-  @ApiOperation({ summary: 'Login a user' }) 
+  @ApiOperation({ summary: 'Login a user' })
   @ApiBody({
     type: LoginDto, // Specifies the DTO class for the request body
     examples: {
@@ -109,17 +118,14 @@ export class AuthController {
     return this.authService.resetPassword(resetPasswordDto);
   }
 
-
-    @ApiOperation({
-      summary: 'Logout',
-      description: 'Logout and clear the token',
-    })
-    @UseGuards(AuthGuard('jwt'))
-    @Post('logout')
-    logout(@Req() req: Request, @Res() res: Response) {
-      res.cookie('access_token', '', { expires: new Date(0) }); 
-      return res.status(200).json({ message: 'Logged out successfully' });
-    }
-
-
+  @ApiOperation({
+    summary: 'Logout',
+    description: 'Logout and clear the token',
+  })
+  @UseGuards(AuthGuard('jwt'))
+  @Post('logout')
+  logout(@Req() req: Request, @Res() res: Response) {
+    res.cookie('access_token', '', { expires: new Date(0) });
+    return res.status(200).json({ message: 'Logged out successfully' });
+  }
 }
