@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { Controller, Post, Body, UseGuards, Get, Param } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Get, Param, Req, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {
   ApiTags,
@@ -13,6 +13,8 @@ import { ThrottlerGuard } from '@nestjs/throttler';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { Request, Response } from 'express';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -106,4 +108,18 @@ export class AuthController {
   async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
     return this.authService.resetPassword(resetPasswordDto);
   }
+
+
+    @ApiOperation({
+      summary: 'Logout',
+      description: 'Logout and clear the token',
+    })
+    @UseGuards(AuthGuard('jwt'))
+    @Post('logout')
+    logout(@Req() req: Request, @Res() res: Response) {
+      res.cookie('access_token', '', { expires: new Date(0) }); 
+      return res.status(200).json({ message: 'Logged out successfully' });
+    }
+
+
 }
