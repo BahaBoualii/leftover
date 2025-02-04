@@ -5,7 +5,6 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToOne,
-  JoinColumn,
 } from 'typeorm';
 import { Role } from 'src/common/enum/role.enum';
 import { Exclude } from 'class-transformer';

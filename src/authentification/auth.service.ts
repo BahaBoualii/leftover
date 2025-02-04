@@ -13,12 +13,9 @@ import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
-import { Role } from 'src/common/enum/role.enum';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Customer } from 'src/customers/entities/customer.entity';
 import { Repository } from 'typeorm';
-
-
 
 @Injectable()
 export class AuthService {
@@ -26,8 +23,8 @@ export class AuthService {
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
     private readonly mailService: MailService,
-     @InjectRepository(Customer)
-        private readonly customerRepository: Repository<Customer>,
+    @InjectRepository(Customer)
+    private readonly customerRepository: Repository<Customer>,
   ) {}
 
   async register(registerDto: RegisterDto) {
@@ -124,13 +121,13 @@ export class AuthService {
       if (!user) {
         throw new BadRequestException('Invalid verification token');
       }
-  
+
       if (user.role === 'user') {
         // Check if the user is already a customer
         const existingCustomer = await this.customerRepository.findOne({
           where: { user: { id: user.id } },
         });
-  
+
         if (!existingCustomer) {
           // Create and save the customer
           const customer = this.customerRepository.create({ user });
@@ -138,7 +135,7 @@ export class AuthService {
           console.log('Customer created:', customer);
         }
       }
-  
+
       await this.usersService.markEmailAsVerified(user.id);
       return { message: 'Email verified successfully' };
     } catch (error) {
@@ -146,8 +143,6 @@ export class AuthService {
       throw new BadRequestException('Email verification failed');
     }
   }
-  
-  
 
   async initiatePasswordReset(email: string) {
     try {

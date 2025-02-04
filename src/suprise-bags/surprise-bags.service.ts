@@ -28,7 +28,7 @@ export class SurpriseBagService {
   ): Promise<SurpriseBag> {
     const store = await this.storeRepository.findOne({
       where: { storeId },
-      relations: ['owner'], 
+      relations: ['owner'],
     });
     if (!store) {
       throw new NotFoundException('Store not found');
