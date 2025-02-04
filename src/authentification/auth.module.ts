@@ -8,9 +8,12 @@ import { MailModule } from 'src/mailing/mail.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from 'src/users/user.module';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Customer } from 'src/customers/entities/customer.entity';
 
 @Module({
   imports: [
+    TypeOrmModule.forFeature([Customer]),
     PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],

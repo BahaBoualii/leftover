@@ -33,19 +33,17 @@ export class User {
 
   @Column()
   phoneNumber: string;
-  //why do we need the status column?
+
   @Column({ default: UserStatus.ACTIVE })
   status: UserStatus;
 
   @OneToOne(() => Customer, (customer) => customer.user, { cascade: true })
-  @JoinColumn()
   customer: Customer;
 
-  @OneToOne(() => Store, (store) => store.user, { cascade: true })
-  @JoinColumn()
+  @OneToOne(() => Store, (store) => store.owner, { cascade: true })
   store: Store;
 
-  @Column({ type: 'enum', enum: Role, default: [Role.USER] })
+  @Column({ type: 'enum', enum: Role, default: Role.USER })
   role: Role;
 
   @Column({ default: false })

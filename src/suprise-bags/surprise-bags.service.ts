@@ -28,13 +28,15 @@ export class SurpriseBagService {
   ): Promise<SurpriseBag> {
     const store = await this.storeRepository.findOne({
       where: { storeId },
-      relations: ['user'], // Include the user relationship
+      relations: ['owner'], 
     });
     if (!store) {
       throw new NotFoundException('Store not found');
     }
 
-    if (store.user.id !== userId) {
+    if (store.owner.id !== userId) {
+      console.log(store.owner.id);
+      console.log(userId);
       throw new ForbiddenException('You are not the owner of this store');
     }
 

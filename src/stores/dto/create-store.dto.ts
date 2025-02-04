@@ -48,6 +48,8 @@ export class CreateStoreDto {
       address: '123 Main Street',
       latitude: 36.8065,
       longitude: 10.1815,
+      postalCode: '1000',
+      country: 'Tunisia',
     },
     type: Location,
     required: true,

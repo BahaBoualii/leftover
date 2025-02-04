@@ -20,7 +20,8 @@ export class Store {
   storeId: string;
 
   @OneToOne(() => User, (user) => user.store, { onDelete: 'CASCADE' })
-  user: User;
+  @JoinColumn()
+  owner: User;
 
   @Column()
   storeName: string;

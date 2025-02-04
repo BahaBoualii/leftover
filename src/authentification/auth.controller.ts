@@ -45,7 +45,7 @@ export class AuthController {
   }
 
   @Post('login')
-  @ApiOperation({ summary: 'Login a user' }) // Adds a summary for the endpoint
+  @ApiOperation({ summary: 'Login a user' }) 
   @ApiBody({
     type: LoginDto, // Specifies the DTO class for the request body
     examples: {
@@ -53,7 +53,7 @@ export class AuthController {
         summary: 'Example of a login request',
         value: {
           email: 'maha.abid@insat.ucar.tn',
-          password: 'TunisiaTulsa2023*',
+          password: 'Azer123456789*',
         },
       },
     },
