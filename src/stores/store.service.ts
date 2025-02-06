@@ -108,9 +108,32 @@ export class StoreService {
 
   // Get all stores (optionally filtered by verification status)
   async getAllStores(): Promise<Store[]> {
-    const stores = await this.storeRepository.find();
+    const stores = await this.storeRepository.find({
+      relations: ['location','owner'], 
+      select: {
+        storeId: true,
+        storeName: true,
+        description: true,
+        category: true,
+        isVerified: true,
+        averageRating: true,
+        photoUrl: true,
+        averageBagValue: true,
+        location: {
+          latitude: true,
+          longitude: true,
+          address: true, 
+          city: true,
+        },
+        owner: {
+          email: true, 
+        },
+      },
+    });
+  
     return stores;
   }
+  
 
   async findByUserId(userId: string): Promise<Store | null> {
     return this.storeRepository.findOne({ where: { owner: { id: userId } } });
